@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { Model } from 'mongoose';
+import { Model, Error } from 'mongoose';
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -20,7 +20,23 @@ export class RoomsService {
     roomCreated.id = randomUUID();
     roomCreated.createdAt = new Date();
 
-    return roomCreated.save();
+    try {
+      await roomCreated.save();
+    } catch (e) {
+      const err: Error = e;
+
+      if (err instanceof Error.ValidationError) {
+        throw new BadRequestException(err.message);
+      }
+
+      if (err.message.includes('duplicate key')) {
+        throw new BadRequestException(err.message);
+      }
+
+      throw err;
+    }
+
+    return roomCreated;
   }
 
   async find(): Promise<Array<Room>> {
