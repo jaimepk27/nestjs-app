@@ -10,19 +10,20 @@ import {
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
+import { Room } from './schemas/room.schema';
 
 @Controller('rooms')
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
   @Post()
-  create(@Body() createRoomDto: CreateRoomDto) {
-    return this.roomsService.create(createRoomDto);
+  async createOne(@Body() createRoomDto: CreateRoomDto): Promise<Room> {
+    return this.roomsService.createOne(createRoomDto);
   }
 
   @Get()
-  findAll() {
-    return this.roomsService.findAll();
+  async find(): Promise<Array<Room>> {
+    return this.roomsService.find();
   }
 
   @Get(':id')

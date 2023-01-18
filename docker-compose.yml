@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  mongodb:
+    image: mongo:6.0-focal
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_conf:/data/configdb
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_conf:
+  mongodb_data:
