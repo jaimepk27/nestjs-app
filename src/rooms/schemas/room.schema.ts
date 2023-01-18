@@ -3,10 +3,19 @@ import { HydratedDocument } from 'mongoose';
 
 export type RoomDocument = HydratedDocument<Room>;
 
-@Schema()
+@Schema({
+  versionKey: false,
+})
 export class Room {
   @Prop({
     required: true,
+    unique: true,
+  })
+  id: string;
+
+  @Prop({
+    required: true,
+    unique: true,
   })
   name: string;
 

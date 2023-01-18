@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Model } from 'mongoose';
 
 import { Injectable } from '@nestjs/common';
@@ -16,11 +17,19 @@ export class RoomsService {
   async createOne(createRoomDto: CreateRoomDto): Promise<Room> {
     const roomCreated = new this.roomModel(createRoomDto);
 
+    roomCreated.id = randomUUID();
+    roomCreated.createdAt = new Date();
+
     return roomCreated.save();
   }
 
   async find(): Promise<Array<Room>> {
-    return this.roomModel.find();
+    return this.roomModel.find(
+      {},
+      {
+        _id: 0,
+      },
+    );
   }
 
   findOne(id: number) {
