@@ -6,13 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { Room } from './schemas/room.schema';
 
-@Controller('rooms')
+@Controller('/api/rooms')
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 
@@ -37,7 +39,8 @@ export class RoomsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roomsService.remove(+id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteOne(@Param('id') id: string): Promise<void> {
+    return this.roomsService.deleteOne(id);
   }
 }

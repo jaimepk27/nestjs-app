@@ -40,7 +40,7 @@ export class RoomsService {
     return `This action updates a #${id} room`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} room`;
+  async deleteOne(name: string): Promise<void> {
+    const res = await this.roomModel.deleteOne({ name });
   }
 }
