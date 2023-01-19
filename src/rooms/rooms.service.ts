@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Model, Error } from 'mongoose';
+import { Model, Error as MongooseError } from 'mongoose';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -22,15 +22,20 @@ export class RoomsService {
 
     try {
       await roomCreated.save();
-    } catch (e) {
-      const err: Error = e;
+    } catch (err) {
+      const cause: MongooseError = err;
 
-      if (err instanceof Error.ValidationError) {
-        throw new BadRequestException(err.message);
+      if (cause instanceof MongooseError.ValidationError) {
+        throw new BadRequestException(cause.message, {
+          cause,
+        });
       }
 
-      if (err.message.includes('duplicate key')) {
-        throw new BadRequestException(err.message);
+      if (cause.message.includes('duplicate key')) {
+        throw new BadRequestException(cause.message, {
+          cause,
+          description: 'Bad Request',
+        });
       }
 
       throw err;
