@@ -1,10 +1,12 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-} from '@nestjs/common';
 import { Request, Response } from 'express';
+
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  Logger,
+} from '@nestjs/common';
 
 export interface ErrorResponse {
   statusCode: number;
@@ -14,6 +16,8 @@ export interface ErrorResponse {
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(HttpExceptionFilter.name);
+
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
@@ -21,6 +25,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     const { error, message } = exception.getResponse() as ErrorResponse;
+
+    if (status < 500) {
+      this.logger.warn(
+        `Failed to complete incoming request, status=${status}, path=${path}`,
+        exception,
+      );
+    } else {
+      this.logger.error(
+        `Failed to complete incoming request, status=${status}, path=${path}`,
+        exception,
+      );
+    }
 
     console.log(exception);
 

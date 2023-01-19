@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { Model, Error as MongooseError } from 'mongoose';
+import { Error as MongooseError, Model } from 'mongoose';
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -10,6 +10,8 @@ import { RoomDocument, Room } from './schemas/room.schema';
 
 @Injectable()
 export class RoomsService {
+  private readonly logger = new Logger(RoomsService.name);
+
   constructor(
     @InjectModel(Room.name) private readonly roomModel: Model<RoomDocument>,
   ) {}
@@ -20,10 +22,16 @@ export class RoomsService {
     roomCreated.id = randomUUID();
     roomCreated.createdAt = new Date();
 
+    this.logger.log(`Create room, name=${roomCreated.name}`);
+
     try {
       await roomCreated.save();
+
+      this.logger.debug(`Room created, name=${roomCreated.name}`);
     } catch (err) {
       const cause: MongooseError = err;
+
+      this.logger.error(`Failed to create room, name=${roomCreated.name}`, err);
 
       if (cause instanceof MongooseError.ValidationError) {
         throw new BadRequestException(cause.message, {
@@ -45,6 +53,8 @@ export class RoomsService {
   }
 
   async find(): Promise<Array<Room>> {
+    this.logger.log('Find rooms');
+
     return this.roomModel.find(
       {},
       {
