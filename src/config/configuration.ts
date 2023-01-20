@@ -1,11 +1,16 @@
 import { readFileSync } from 'fs';
-import * as yaml from 'js-yaml';
+import { load } from 'js-yaml';
 import { resolve } from 'path';
 
-const YAML_CONFIG_FILENAME = 'config/application.yml';
+import { ConfigFactory, ConfigObject } from '@nestjs/config';
 
-export default () => {
-  return yaml.load(
-    readFileSync(resolve(YAML_CONFIG_FILENAME), 'utf8'),
-  ) as Record<string, any>;
+export function loadConfigFile(filename: string): ConfigObject {
+  const filepath = resolve('config', filename);
+  const file = readFileSync(filepath, { encoding: 'utf8' });
+
+  return load(file);
+}
+
+export const ConfigFileLoader: ConfigFactory = () => {
+  return loadConfigFile('application.yml');
 };

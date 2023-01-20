@@ -9,18 +9,19 @@ import { UsersModule } from './users/users.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
-import { MongodbConfigService } from './mongodb-config/mongodb-config.service';
 import { ServerPropertiesService } from './server-properties/server-properties.service';
-import configuration from './config/configuration';
+import { ConfigFileLoader } from './config/configuration';
+import { MongooseLoaderService } from './mongoose-loader/mongoose-loader.service';
+import { MongoDbPropertiesModule } from './mongodb-properties/mongodb-properties.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [configuration],
+      load: [ConfigFileLoader],
     }),
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useClass: MongodbConfigService,
+      imports: [MongoDbPropertiesModule],
+      useClass: MongooseLoaderService,
     }),
     UsersModule,
     RoomsModule,
@@ -32,7 +33,6 @@ import configuration from './config/configuration';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    MongodbConfigService,
     ServerPropertiesService,
   ],
 })

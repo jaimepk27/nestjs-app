@@ -1,3 +1,3 @@
-export interface MongodbProperties {
+export interface MongoDbProperties {
   uri: string;
 }

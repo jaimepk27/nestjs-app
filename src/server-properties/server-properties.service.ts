@@ -10,7 +10,7 @@ export class ServerPropertiesService {
   constructor(configService: ConfigService) {
     const properties = configService.get<ServerProperties>('server');
 
-    this.port = properties.port || 8080;
+    this.port = properties?.port || 8080;
   }
 
   getPort(): number {
