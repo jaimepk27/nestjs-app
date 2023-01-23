@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
@@ -13,6 +12,7 @@ import { ServerPropertiesService } from './server-properties/server-properties.s
 import { ConfigFileLoader } from './config/configuration';
 import { MongooseLoaderService } from './mongoose-loader/mongoose-loader.service';
 import { MongoDbPropertiesModule } from './mongodb-properties/mongodb-properties.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
