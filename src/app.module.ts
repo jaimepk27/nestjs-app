@@ -13,6 +13,7 @@ import { ConfigFileLoader } from './config/configuration';
 import { MongooseLoaderService } from './mongoose-loader/mongoose-loader.service';
 import { MongoDbPropertiesModule } from './mongodb-properties/mongodb-properties.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UsersModule } from './users/users.module';
     }),
     UsersModule,
     RoomsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

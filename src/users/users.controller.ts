@@ -6,17 +6,20 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth/jwt-auth.guard';
 
 @Controller('/api/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createOne(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.createOne(createUserDto);
