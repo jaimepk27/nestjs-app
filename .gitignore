@@ -5,6 +5,9 @@
 # configuration
 /config/*.yml
 
+# multer
+/media
+
 # Logs
 logs
 *.log
